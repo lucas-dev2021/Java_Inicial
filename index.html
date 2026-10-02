@@ -1,0 +1,304 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Próximas Faturas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@700;800;900&family=Inter:wght@400;500;600;700&family=Roboto+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --red: #d61f2a; --ink: #141a20; --txt: #5c6773; --lbl: #8a95a1;
+    --bg2: #f4f6f8; --line: #e6e9ee; --line2: #d3d8df;
+    --amber: #c67d00; --green: #1f9d63; --blue: #2563a8;
+    --shadow: 0 1px 2px rgba(20,26,32,.04), 0 4px 12px rgba(20,26,32,.03);
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: #fff; color: var(--ink); font: 400 15px/1.55 Inter, sans-serif; }
+  .wrap { max-width: 1500px; margin: 0 auto; padding: 32px 48px 64px; }
+  .mono { font-family: "Roboto Mono", monospace; }
+
+  header { display: flex; justify-content: space-between; align-items: flex-end; gap: 16px; flex-wrap: wrap;
+           padding-bottom: 24px; border-bottom: 1px solid var(--line); margin-bottom: 32px; }
+  .brand b { display: block; font: 900 22px/1 Archivo, sans-serif; letter-spacing: .14em; color: var(--red); }
+  .brand span { display: block; margin-top: 6px; font: 400 10px/1 "Roboto Mono", monospace; letter-spacing: .42em; color: var(--lbl); }
+  .today { font: 400 12px "Roboto Mono", monospace; color: var(--lbl); text-transform: uppercase; letter-spacing: .1em; }
+
+  .eyebrow { display: flex; align-items: center; gap: 10px; font: 500 12px "Roboto Mono", monospace;
+             text-transform: uppercase; letter-spacing: .22em; color: var(--red); margin: 0 0 10px; }
+  .eyebrow::before { content: ""; width: 26px; height: 2px; background: var(--red); }
+  h1 { font: 800 clamp(27px, 3.2vw, 46px)/1.04 Archivo, sans-serif; letter-spacing: -.02em; max-width: 28ch; margin: 0 0 12px; }
+  .lead { font-size: 18px; color: var(--txt); max-width: 86ch; margin: 0 0 32px; }
+
+  .grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 32px; }
+  .hero { background: var(--red); color: #fff; border-radius: 14px; padding: 20px 22px;
+          box-shadow: 0 8px 26px rgba(214,31,42,.20); }
+  .hero small { font: 500 11px "Roboto Mono", monospace; text-transform: uppercase; letter-spacing: .14em; opacity: .88; }
+  .hero .v { font: 900 34px/1.04 Archivo, sans-serif; letter-spacing: -.02em; margin-top: 10px; }
+  .hero .m { font: 400 11px "Roboto Mono", monospace; opacity: .88; margin-top: 6px; }
+
+  .card { background: #fff; border: 1px solid var(--line); border-radius: 12px; box-shadow: var(--shadow); }
+  .kpi { position: relative; padding: 18px 20px; }
+  .kpi .l { font-size: 12.5px; color: var(--txt); }
+  .kpi .v { font: 700 29px/1.2 "Roboto Mono", monospace; margin-top: 6px; }
+  .kpi .m { font: 400 11px "Roboto Mono", monospace; color: var(--lbl); margin-top: 4px; }
+  .kpi .dot { position: absolute; top: 16px; right: 16px; width: 9px; height: 9px; border-radius: 50%;
+              background: var(--c); box-shadow: 0 0 0 4px color-mix(in srgb, var(--c) 14%, transparent); }
+
+  .cols { display: grid; grid-template-columns: 360px 1fr; gap: 24px; align-items: start; }
+  form.card { padding: 22px; }
+  form h2, .list h2 { font: 800 20px/1.04 Archivo, sans-serif; letter-spacing: -.02em; margin: 0 0 18px; }
+  label { display: block; font: 500 10.5px "Roboto Mono", monospace; text-transform: uppercase; letter-spacing: .1em; color: var(--lbl); margin: 0 0 6px; }
+  .f { margin-bottom: 14px; }
+  input, select { width: 100%; padding: 10px 12px; border: 1px solid var(--line2); border-radius: 8px; font: 400 15px Inter, sans-serif; color: var(--ink); background: #fff; }
+  input[type=number], input[type=date] { font-family: "Roboto Mono", monospace; }
+  input:focus, select:focus { outline: 2px solid color-mix(in srgb, var(--red) 30%, transparent); border-color: var(--red); }
+  .chk { display: flex; align-items: center; gap: 8px; font: 400 14px Inter, sans-serif; text-transform: none; letter-spacing: 0; color: var(--txt); margin-bottom: 18px; }
+  .chk input { width: auto; }
+  .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+  button { font: 600 14px Inter, sans-serif; border-radius: 8px; padding: 10px 16px; cursor: pointer; border: 1px solid var(--line2); background: #fff; color: var(--ink); }
+  button.primary { background: var(--red); border-color: var(--red); color: #fff; width: 100%; }
+  button.primary:hover { filter: brightness(.94); }
+  button.sm { padding: 6px 10px; font-size: 12.5px; }
+  button.ok { border-color: var(--green); color: var(--green); }
+  button.ghost { border-color: transparent; color: var(--lbl); }
+  button.ghost:hover { color: var(--red); }
+  .tools { display: flex; gap: 8px; margin-top: 14px; }
+  .tools button { flex: 1; font-size: 12.5px; }
+
+  .list .head { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; margin-bottom: 14px; }
+  .list .head h2 { margin: 0; }
+  .tabs { display: flex; gap: 4px; background: var(--bg2); padding: 4px; border-radius: 10px; }
+  .tabs button { border: 0; background: transparent; padding: 6px 12px; font-size: 13px; color: var(--txt); }
+  .tabs button.on { background: #fff; color: var(--ink); box-shadow: var(--shadow); }
+
+  .bill { display: grid; grid-template-columns: 140px 1fr auto auto; gap: 16px; align-items: center;
+          padding: 14px 18px; margin-bottom: 10px; border-left: 3px solid var(--c); }
+  .bill .date { font: 700 15px "Roboto Mono", monospace; }
+  .bill .rel { font: 500 11px "Roboto Mono", monospace; text-transform: uppercase; letter-spacing: .06em; color: var(--c); }
+  .bill .name { font-weight: 600; }
+  .bill .meta { font: 400 11px "Roboto Mono", monospace; color: var(--lbl); text-transform: uppercase; letter-spacing: .08em; }
+  .bill .val { font: 700 17px "Roboto Mono", monospace; text-align: right; white-space: nowrap; }
+  .bill .act { display: flex; gap: 6px; }
+  .bill.paid { opacity: .6; }
+  .bill.paid .name { text-decoration: line-through; }
+  .empty { padding: 40px; text-align: center; color: var(--txt); background: var(--bg2); border-radius: 12px; }
+
+  @media (max-width: 1000px) { .grid { grid-template-columns: repeat(2, 1fr); } .cols { grid-template-columns: 1fr; } }
+  @media (max-width: 600px) {
+    .wrap { padding: 20px 16px 48px; }
+    .grid { grid-template-columns: 1fr; }
+    .bill { grid-template-columns: 1fr auto; }
+    .bill .act { grid-column: 1 / -1; justify-content: flex-end; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="brand"><b>SANDÉLEH</b><span>ALIMENTOS</span></div>
+    <div class="today" id="today"></div>
+  </header>
+
+  <p class="eyebrow">Controle de pagamentos</p>
+  <h1>Próximas faturas a vencer</h1>
+  <p class="lead">Cadastre as contas com data de vencimento. As vencidas e as que vencem nos próximos dias ficam em destaque. Contas recorrentes avançam para o mês seguinte ao serem marcadas como pagas.</p>
+
+  <section class="grid" id="kpis"></section>
+
+  <div class="cols">
+    <form class="card" id="form" autocomplete="off">
+      <h2 id="formTitle">Nova fatura</h2>
+      <input type="hidden" id="id">
+      <div class="f"><label for="desc">Descrição</label><input id="desc" required placeholder="Ex.: Internet, Aluguel, Cartão"></div>
+      <div class="row2">
+        <div class="f"><label for="valor">Valor (R$)</label><input id="valor" type="number" step="0.01" min="0" required placeholder="0,00"></div>
+        <div class="f"><label for="venc">Vencimento</label><input id="venc" type="date" required></div>
+      </div>
+      <div class="f"><label for="cat">Categoria</label>
+        <select id="cat"><option>Moradia</option><option>Cartão</option><option>Serviços</option><option>Impostos</option><option>Fornecedor</option><option>Outros</option></select>
+      </div>
+      <label class="chk"><input type="checkbox" id="rec"> Recorrente (todo mês)</label>
+      <button class="primary" type="submit" id="submitBtn">Adicionar fatura</button>
+      <button type="button" class="ghost" id="cancelEdit" style="display:none;width:100%;margin-top:6px">Cancelar edição</button>
+      <div class="tools">
+        <button type="button" id="exportBtn">Exportar backup</button>
+        <button type="button" id="importBtn">Importar backup</button>
+        <input type="file" id="importFile" accept="application/json" hidden>
+      </div>
+    </form>
+
+    <section class="list">
+      <div class="head">
+        <h2>Faturas</h2>
+        <div class="tabs" id="tabs">
+          <button data-f="abertas" class="on">Em aberto</button>
+          <button data-f="pagas">Pagas</button>
+          <button data-f="todas">Todas</button>
+        </div>
+      </div>
+      <div id="list"></div>
+    </section>
+  </div>
+</div>
+
+<script>
+const KEY = 'faturas.v1';
+const $ = id => document.getElementById(id);
+const brl = v => v.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+const fmtDate = iso => iso.split('-').reverse().join('/');
+const C = { red: 'var(--red)', amber: 'var(--amber)', green: 'var(--green)', blue: 'var(--blue)' };
+
+let bills = load();
+let filter = 'abertas';
+
+function load() {
+  try { return JSON.parse(localStorage.getItem(KEY)) || []; } catch { return []; }
+}
+function save() {
+  try { localStorage.setItem(KEY, JSON.stringify(bills)); } catch {}
+  render();
+}
+function todayISO() {
+  const d = new Date(); d.setMinutes(d.getMinutes() - d.getTimezoneOffset());
+  return d.toISOString().slice(0, 10);
+}
+function daysUntil(iso) {
+  const [y, m, d] = iso.split('-').map(Number);
+  const t = new Date(); t.setHours(0, 0, 0, 0);
+  return Math.round((new Date(y, m - 1, d) - t) / 86400000);
+}
+function nextMonth(iso) {
+  const [y, m, d] = iso.split('-').map(Number);
+  const last = new Date(y, m + 1, 0).getDate();          // último dia do mês seguinte
+  const n = new Date(y, m, Math.min(d, last));
+  return `${n.getFullYear()}-${String(n.getMonth() + 1).padStart(2, '0')}-${String(n.getDate()).padStart(2, '0')}`;
+}
+function status(b) {
+  if (b.pago) return { c: C.green, t: 'Paga' };
+  const d = daysUntil(b.venc);
+  if (d < 0) return { c: C.red, t: `Vencida há ${-d} dia${d === -1 ? '' : 's'}` };
+  if (d === 0) return { c: C.red, t: 'Vence hoje' };
+  if (d <= 7) return { c: C.amber, t: d === 1 ? 'Vence amanhã' : `Em ${d} dias` };
+  return { c: C.blue, t: `Em ${d} dias` };
+}
+
+function renderKpis() {
+  const open = bills.filter(b => !b.pago);
+  const sum = arr => arr.reduce((s, b) => s + b.valor, 0);
+  const late = open.filter(b => daysUntil(b.venc) < 0);
+  const week = open.filter(b => { const d = daysUntil(b.venc); return d >= 0 && d <= 7; });
+  const ym = todayISO().slice(0, 7);
+  const month = open.filter(b => b.venc.slice(0, 7) === ym);
+  const next = [...open].sort((a, b) => a.venc.localeCompare(b.venc))[0];
+
+  const kpi = (l, v, m, c) => `<div class="card kpi" style="--c:${c}"><span class="dot"></span>
+    <div class="l">${l}</div><div class="v" style="color:${c}">${v}</div><div class="m">${m}</div></div>`;
+
+  $('kpis').innerHTML = `
+    <div class="hero"><small>Total em aberto</small><div class="v">${brl(sum(open))}</div>
+      <div class="m">${open.length} fatura${open.length === 1 ? '' : 's'}</div></div>
+    ${kpi('Vencidas', late.length, brl(sum(late)), late.length ? C.red : C.green)}
+    ${kpi('Vencem em até 7 dias', week.length, brl(sum(week)), week.length ? C.amber : C.green)}
+    ${kpi('Próximo vencimento', next ? fmtDate(next.venc) : '—',
+          next ? `${esc(next.desc)} · ${brl(next.valor)}` : `Mês atual: ${brl(sum(month))}`,
+          next ? status(next).c : C.green)}`;
+}
+
+function esc(s) { return s.replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c])); }
+
+function renderList() {
+  let rows = bills.filter(b => filter === 'todas' || (filter === 'pagas' ? b.pago : !b.pago));
+  rows.sort((a, b) => filter === 'pagas' ? b.venc.localeCompare(a.venc) : a.venc.localeCompare(b.venc));
+  if (!rows.length) {
+    $('list').innerHTML = `<div class="empty">${filter === 'pagas' ? 'Nenhuma fatura paga ainda.' : 'Nenhuma fatura em aberto. Cadastre a primeira ao lado.'}</div>`;
+    return;
+  }
+  $('list').innerHTML = rows.map(b => {
+    const s = status(b);
+    return `<div class="card bill ${b.pago ? 'paid' : ''}" style="--c:${s.c}">
+      <div><div class="date">${fmtDate(b.venc)}</div><div class="rel">${s.t}</div></div>
+      <div><div class="name">${esc(b.desc)}</div><div class="meta">${esc(b.cat)}${b.rec ? ' · Recorrente' : ''}</div></div>
+      <div class="val">${brl(b.valor)}</div>
+      <div class="act">
+        ${b.pago ? `<button class="sm" data-a="reabrir" data-id="${b.id}">Reabrir</button>`
+                 : `<button class="sm ok" data-a="pagar" data-id="${b.id}">Paguei</button>`}
+        <button class="sm" data-a="editar" data-id="${b.id}">Editar</button>
+        <button class="sm ghost" data-a="excluir" data-id="${b.id}" title="Excluir">✕</button>
+      </div></div>`;
+  }).join('');
+}
+
+function render() { renderKpis(); renderList(); }
+
+function resetForm() {
+  $('form').reset(); $('id').value = ''; $('venc').value = todayISO();
+  $('formTitle').textContent = 'Nova fatura'; $('submitBtn').textContent = 'Adicionar fatura';
+  $('cancelEdit').style.display = 'none';
+}
+
+$('form').addEventListener('submit', e => {
+  e.preventDefault();
+  const data = { desc: $('desc').value.trim(), valor: parseFloat($('valor').value) || 0,
+                 venc: $('venc').value, cat: $('cat').value, rec: $('rec').checked };
+  const id = $('id').value;
+  if (id) Object.assign(bills.find(b => b.id === id), data);
+  else bills.push({ id: crypto.randomUUID?.() || String(Date.now()), pago: false, ...data });
+  resetForm(); save();
+});
+$('cancelEdit').onclick = resetForm;
+
+$('list').addEventListener('click', e => {
+  const btn = e.target.closest('button[data-a]'); if (!btn) return;
+  const b = bills.find(x => x.id === btn.dataset.id); if (!b) return;
+  switch (btn.dataset.a) {
+    case 'pagar':
+      b.pago = true; b.pagoEm = todayISO();
+      if (b.rec) {                                   // gera a próxima ocorrência
+        bills.push({ ...b, id: crypto.randomUUID?.() || String(Date.now()), pago: false, pagoEm: undefined, venc: nextMonth(b.venc) });
+        b.rec = false;                               // a recorrência segue na nova
+      }
+      break;
+    case 'reabrir': b.pago = false; delete b.pagoEm; break;
+    case 'excluir': if (!confirm(`Excluir "${b.desc}"?`)) return; bills = bills.filter(x => x !== b); break;
+    case 'editar':
+      $('id').value = b.id; $('desc').value = b.desc; $('valor').value = b.valor; $('venc').value = b.venc;
+      $('cat').value = b.cat; $('rec').checked = b.rec;
+      $('formTitle').textContent = 'Editar fatura'; $('submitBtn').textContent = 'Salvar alterações';
+      $('cancelEdit').style.display = 'block'; $('desc').focus();
+      return;
+  }
+  save();
+});
+
+$('tabs').addEventListener('click', e => {
+  const btn = e.target.closest('button'); if (!btn) return;
+  filter = btn.dataset.f;
+  [...$('tabs').children].forEach(x => x.classList.toggle('on', x === btn));
+  renderList();
+});
+
+$('exportBtn').onclick = () => {
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([JSON.stringify(bills, null, 2)], { type: 'application/json' }));
+  a.download = `faturas-${todayISO()}.json`; a.click(); URL.revokeObjectURL(a.href);
+};
+$('importBtn').onclick = () => $('importFile').click();
+$('importFile').onchange = async e => {
+  const f = e.target.files[0]; if (!f) return;
+  try {
+    const data = JSON.parse(await f.text());
+    if (!Array.isArray(data)) throw 0;
+    if (confirm(`Substituir as faturas atuais por ${data.length} do backup?`)) { bills = data; save(); }
+  } catch { alert('Arquivo de backup inválido.'); }
+  e.target.value = '';
+};
+
+$('today').textContent = new Date().toLocaleDateString('pt-BR', { weekday: 'long', day: '2-digit', month: 'long', year: 'numeric' });
+resetForm(); render();
+setInterval(render, 60 * 60 * 1000);                 // atualiza status se a aba ficar aberta
+</script>
+</body>
+</html>

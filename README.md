@@ -1,20 +1,10 @@
-# Java_Inicial
+# Próximas Faturas
 
-### Lógica condicional
-AND (E)   | OR (OU)   |
---------- | ------    | 
-V V - V   | V V - V   |
-V F - F   | V F - V   |
-F V - F   | F V - V   |
-F F - F   | F F - F   |
+Aplicativo de página única para acompanhar contas a vencer.
 
-#### Declarando variável
+## Uso
+Abra `index.html` no navegador (duplo clique). Não precisa de servidor nem instalação.
 
-~~~java
-int idade = 27;
-~~~
-
-#### Estrutura de Repetição
-**While** - Repetição com teste no inicio <br>
-**Do-While** - Repetição com teste no final <br>
-**For** - Contada <br>
+- **Status:** vermelho = vencida/vence hoje · âmbar = vence em até 7 dias · azul = mais adiante · verde = paga
+- **Recorrente:** ao clicar em *Paguei*, a próxima ocorrência é criada no mês seguinte (dia 31 vira o último dia do mês quando necessário).
+- **Backup:** os dados ficam no `localStorage` do navegador. Use *Exportar backup* periodicamente — limpar dados do navegador apaga as faturas.
