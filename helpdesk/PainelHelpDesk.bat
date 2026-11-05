@@ -7,7 +7,9 @@ chcp 65001 >nul
 :: ============================================================
 set "EMPRESA=SANDELEH ALIMENTOS"
 set "TITULO=TI Console - %EMPRESA%"
-set "PASTA_SAIDA=%USERPROFILE%\Desktop\HelpDesk_Saida"
+set "RAIZ=%~dp0"
+:: Saída fica no próprio pen drive, separada por máquina
+set "PASTA_SAIDA=%RAIZ%Saida\%COMPUTERNAME%"
 
 :: ============================================================
 ::  AUTO-ELEVAÇÃO (reabre como Administrador se necessário)
@@ -21,7 +23,13 @@ if %errorlevel% neq 0 (
 title %TITULO%
 color 0A
 mode con: cols=90 lines=50
-if not exist "%PASTA_SAIDA%" mkdir "%PASTA_SAIDA%"
+cd /d "%RAIZ%"
+if not exist "%PASTA_SAIDA%" mkdir "%PASTA_SAIDA%" 2>nul
+:: Fallback se o pen drive estiver protegido contra gravação
+if not exist "%PASTA_SAIDA%" (
+    set "PASTA_SAIDA=%TEMP%\HelpDesk_Saida"
+    mkdir "!PASTA_SAIDA!" 2>nul
+)
 
 :MENU
 cls
